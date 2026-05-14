@@ -1,4 +1,4 @@
-# Deploying the Scientific Article Data-Extraction Prompt as a Microsoft Copilot Studio Agent: A Comprehensive Implementation Guide
+# Deploying the Scientific Article Data-Extraction Prompt as a Microsoft Copilot Studio Agent: Implementation Guide
 
 ## 1. Overview and Purpose
 
