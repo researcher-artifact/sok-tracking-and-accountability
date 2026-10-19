@@ -2,4 +2,4 @@ The workbook "SoK - Tracking and Accountability for Digital Objects in Informati
 
 ## Dashboard
 
-The [`dashboard/`](dashboard/) folder holds an interactive dashboard of the study (overview, data extraction form, thematic analysis, RQ1–RQ5 and heatmaps), read directly from the DEF/TA spreadsheet. See [dashboard/README.md](dashboard/README.md).
+An interactive dashboard of the study (overview, data extraction form, thematic analysis, RQ1–RQ5 and heatmaps), read directly from the DEF/TA spreadsheet, is published at <https://researcher-artifact.github.io/research-artifact.github.io/>. Its source is in [researcher-artifact/research-artifact.github.io](https://github.com/researcher-artifact/research-artifact.github.io).
