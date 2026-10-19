@@ -1,7 +1,7 @@
 /*
  * Dashboard user interface: tabs, the studies-by-year chart, the DEF and
  * thematic analysis tables, one table per research question and the heatmaps.
- * The data model comes from data.js; citations come from data/references.json,
+ * The data model comes from data.js; citations come from data/references.js,
  * which follows the numbering of the article's reference list.
  */
 (function () {
@@ -9,8 +9,6 @@
 
   const CONFIG = {
     workbook: 'data/DEF_TA.xlsx',
-    article: 'data/article.json',
-    references: 'data/references.json',
     maxSeries: 8,
   };
 
@@ -614,12 +612,6 @@
 
   // ----------------------------------------------------------------- load
 
-  async function fetchJSON(url) {
-    const res = await fetch(url, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-    return res.json();
-  }
-
   function readWorkbook(buffer) {
     // Only the sheets the dashboard uses are parsed, which keeps loading fast.
     const probe = XLSX.read(buffer, { type: 'array', bookSheets: true });
@@ -645,10 +637,17 @@
     setupTooltip();
     $('dialog-close').onclick = () => $('dialog').close();
     $('dialog').addEventListener('click', (e) => { if (e.target === $('dialog')) $('dialog').close(); });
+    // Article metadata and references are loaded as scripts (data/article.js and
+    // data/references.js), so they are available even when the page is opened from disk.
+    state.article = window.DASHBOARD_ARTICLE;
+    state.references = window.DASHBOARD_REFERENCES || {};
+    if (!window.DASHBOARD_REFERENCES) console.error('data/references.js was not loaded: citation numbers are unavailable.');
+    $('article-title').textContent = state.article.title;
+    buildTabs();
     try {
-      [state.article, state.references] = await Promise.all([fetchJSON(CONFIG.article), fetchJSON(CONFIG.references)]);
-      $('article-title').textContent = state.article.title;
-      buildTabs();
+      if (location.protocol === 'file:') {
+        throw new Error('the page was opened directly from disk, and browsers do not let such a page read the spreadsheet next to it');
+      }
       const res = await fetch(CONFIG.workbook, { cache: 'no-cache' });
       if (!res.ok) throw new Error(`${CONFIG.workbook}: HTTP ${res.status}`);
       const modified = res.headers.get('Last-Modified');
@@ -656,21 +655,15 @@
       useWorkbook(wb, `Data read from ${CONFIG.workbook}${modified ? `, last updated ${new Date(modified).toLocaleString('en-GB')}` : ''}. Citation numbers follow the article's reference list.`);
     } catch (err) {
       console.error(err);
-      const hint = location.protocol === 'file:'
-        ? ' Browsers block reading local files from a page opened directly from disk. Serve the folder over HTTP (for example, python3 -m http.server) or choose the spreadsheet below.'
-        : '';
-      $('status').textContent = `The data could not be loaded: ${err.message}.${hint}`;
+      $('status').textContent = `The spreadsheet could not be loaded: ${err.message}. Choose ${CONFIG.workbook} with the file picker at the bottom of the page, or serve the folder over HTTP (for example, python3 -m http.server).`;
       $('status').classList.add('error');
     }
     $('file-input').addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       try {
-        if (!state.article) {
-          state.article = { title: file.name, authors: [], affiliation: '', abstract: '', keywords: [], researchQuestions: [] };
-          buildTabs();
-        }
-        useWorkbook(readWorkbook(await file.arrayBuffer()), `Previewing ${file.name} from this computer. Reload the page to return to ${CONFIG.workbook}.`);
+        $('status').classList.remove('error');
+        useWorkbook(readWorkbook(await file.arrayBuffer()), `Previewing ${file.name} from this computer. Reload the page to return to ${CONFIG.workbook}. Citation numbers follow the article's reference list.`);
       } catch (err) {
         console.error(err);
         alert(`This file could not be read: ${err.message}`);
