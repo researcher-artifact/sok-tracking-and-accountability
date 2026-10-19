@@ -20,20 +20,20 @@ All figures are computed in the browser from the DEF/TA spreadsheet each time th
 |---|---|
 | `index.html`, `assets/` | The page, its styles and scripts. `assets/data.js` reads the workbook; `assets/app.js` draws the views. |
 | `data/DEF_TA.xlsx` | The DEF/TA spreadsheet the page reads. |
-| `data/article.json` | Title, authors, abstract, keywords and research questions, taken from the manuscript. |
-| `data/references.json` | Citation number and formatted reference of every work cited in the article, in the order of the article's reference list (elsarticle-num). |
-| `tools/build_references.py` | Regenerates `data/references.json` from the manuscript's `.tex` and `.bib` files. |
+| `data/article.js` | Title, authors, abstract, keywords and research questions, taken from the manuscript. |
+| `data/references.js` | Citation number and formatted reference of every work cited in the article, in the order of the article's reference list (elsarticle-num). |
+| `tools/build_references.py` | Regenerates `data/references.js` from the manuscript's `.tex` and `.bib` files. |
 | `assets/vendor/` | SheetJS 0.18.5 (Apache 2.0) and Chart.js 4.4.1 (MIT), kept locally so the page works without external services. |
 
 ## Updating the data
 
 - **Spreadsheet:** replace `data/DEF_TA.xlsx` with the new version (same file name) and commit it. Sheet and column names must stay as they are; category names are read from the RQ summary sheets, and the study assignments from *Thematic Analysis* and *ApproachesAnalyses*.
-- **Article text:** edit `data/article.json`.
+- **Article text:** edit `data/article.js`.
 - **Citation numbers:** after the article's citations change, run
 
   ```sh
   python3 tools/build_references.py --tex "path/to/Tracking and Accountability for Digital Objects.tex" \
-      --bib path/to/cas-refs.bib --out data/references.json
+      --bib path/to/cas-refs.bib --out data/references.js
   ```
 
   A study that is not cited in the article is listed with its title and year and the mark `[?]`.
@@ -42,7 +42,7 @@ The footer has a file picker for previewing another version of the spreadsheet l
 
 ## Viewing
 
-The page must be served over HTTP, because browsers do not let a page opened from disk read files next to it. GitHub Pages works as is (*Settings → Pages*, deploy from the branch, and open `/dashboard/`). Locally:
+Served over HTTP, the page reads the spreadsheet on its own. Opened directly from disk (double-clicking `index.html`), it still shows the article, tabs and citation numbers, but the browser does not let it read `data/DEF_TA.xlsx` by itself, so choose that file with the picker at the bottom of the page. GitHub Pages works as is (*Settings → Pages*, deploy from the branch, and open `/dashboard/`). Locally:
 
 ```sh
 cd dashboard
