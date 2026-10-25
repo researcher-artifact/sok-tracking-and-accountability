@@ -2,4 +2,4 @@ The workbook "SoK - Tracking and Accountability for Digital Objects in Informati
 
 ## Dashboard
 
-An interactive dashboard of the study (overview, study selection, data extraction form, thematic analysis, Fleiss' kappa, RQ1–RQ5, TRL and heatmaps), read directly from the DEF/TA spreadsheet, is published at <https://researcher-artifact.github.io/research-artifact.github.io/>. Its source is in [researcher-artifact/research-artifact.github.io](https://github.com/researcher-artifact/research-artifact.github.io).
+An interactive dashboard of the study (overview, study selection, data extraction form, thematic analysis, Fleiss' kappa, RQ1–RQ5, TRL, data protection requirements and heatmaps), read directly from the DEF/TA spreadsheet, is published at <https://researcher-artifact.github.io/research-artifact.github.io/>. Its source is in [researcher-artifact/research-artifact.github.io](https://github.com/researcher-artifact/research-artifact.github.io).
